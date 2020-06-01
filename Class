@@ -1,0 +1,248 @@
+
+
+#include <iostream>
+
+class Fraction
+{
+private:
+	int _numerator;
+	int _denominator;
+	bool _simplified;
+	bool _negative;
+	int prop1;
+	int prop2;
+	int prop3;
+	int prop4;
+	int prop5;
+	int prop6;
+	void init()
+	{
+		_numerator = 0;
+		_denominator = 1;
+		_simplified = 0;
+		_negative = 0;
+	}
+	int gcd(int numerator, int denominator)
+	{
+		return denominator == 0 ? numerator : gcd(denominator, numerator % denominator);
+	}
+public:
+	Fraction()
+	{
+		init();
+	}
+	Fraction(const Fraction& frac) : _numerator(frac._numerator), _denominator(frac._denominator), _simplified(frac._simplified) {}
+	Fraction(Fraction&& frac)
+	{
+		_numerator = std::move(frac._numerator);
+		_denominator = std::move(frac._denominator);
+		_simplified = std::move(frac._simplified);
+	}
+	Fraction(int numerator,int denominator)
+	{
+		_numerator = numerator;
+		_denominator = denominator;
+		_simplified = 0;
+	}
+	~Fraction()
+	{
+		_numerator = 0;
+	}
+	int getNumerator()
+	{
+		return _numerator;
+	}
+	int getDenominator()
+	{
+		return _denominator;
+	}
+	void setDenominator(int denom)
+	{
+		_denominator = denom;
+	}
+	void setNumerator(int num)
+	{
+		_numerator = num;
+	}
+	bool getSimplified()
+	{
+		return _simplified;
+	}
+	void setSimplified()
+	{
+		_simplified = 1;
+	}
+	int getProp1()
+	{
+		return prop1;
+	}
+	void setProp1(int val)
+	{
+		prop1 = val;
+	}
+	int getProp2();
+	void setProp2(int val);
+	int getProp3();
+	void setProp3(int val);
+	int getProp4();
+	void setProp4(int val);
+	int getProp5();
+	void setProp5(int val);
+	int getProp6();
+	void setProp6(int val);
+	bool getNegative()
+	{
+		if (_numerator < 0 && _denominator < 0)
+		{
+			return false;
+		}
+		if (_numerator < 0 && _denominator > 0)
+		{
+			return true;
+		}
+		if (_denominator < 0 && _numerator > 0)
+		{
+			_numerator = -_numerator;
+			_denominator = -_denominator;
+			return true;
+		}
+		return false;
+	}
+	void setNegative()
+	{
+		if (_denominator < 0 && _numerator > 0)
+		{
+			_numerator = -_numerator;
+			_denominator = -_denominator;
+		}
+	}
+	
+	void simplify()
+	{
+		int g = gcd(_numerator, _denominator);
+		_numerator /= g;
+		_denominator /= g;
+		_simplified = 1;
+	}
+	void plusplus()
+	{
+		_numerator += 1;
+	}
+	void minusminus()
+	{
+		_numerator -= 1;
+	}
+	void getHalf()
+	{
+		_numerator /= 2;
+		simplify();
+	}
+	void getDouble()
+	{
+		_numerator *= 2;
+		simplify();
+	}
+	inline void getTriple()
+	{
+		_numerator *= 3;
+		simplify();
+	}
+	inline void getTimesFive()
+	{
+		_numerator *= 5;
+		simplify();
+	}
+	void method7();
+	Fraction& operator+(Fraction frac)
+	{
+		if (_denominator != frac._denominator)
+		{
+			_denominator *= frac._denominator;
+			_numerator *= frac._denominator;
+			frac._numerator *= _denominator / frac._denominator;
+			_numerator += frac._numerator;
+		}
+		else
+		{
+			_numerator += frac._numerator;
+		}
+		return *this;
+	}
+	Fraction& operator-(Fraction frac)
+	{
+		if (_denominator != frac._denominator)
+		{
+			_denominator *= frac._denominator;
+			_numerator *= frac._denominator;
+			frac._numerator *= _denominator / frac._denominator;
+			_numerator -= frac._numerator;
+		}
+		else
+		{
+			_numerator -= frac._numerator;
+		}
+		return *this;
+	}
+	Fraction& operator*(Fraction frac)
+	{
+		_numerator *= frac._numerator;
+		simplify();
+		return *this;
+	}
+	
+	Fraction& operator=(const Fraction frac)
+	{
+		_numerator = frac._numerator;
+		_denominator = frac._denominator;
+		_simplified = frac._simplified;
+		return *this;
+	}
+	operator int()
+	{
+		return int(_numerator / _denominator);
+	}
+	operator double()
+	{
+		return double(_numerator) / _denominator;
+	}
+	operator char()
+	{
+		return char(int(_numerator / _denominator)+'0');
+	}
+
+	friend Fraction operator*(const int val, Fraction& frac);
+	friend std::ostream& operator<<(std::ostream& out,  Fraction& frac);
+	friend Fraction operator*(Fraction& frac, const int val);
+
+};
+Fraction operator* (const int val, Fraction& frac)
+{
+	frac._numerator *= val;
+	frac.simplify();
+	return frac;
+}
+Fraction operator* (Fraction& frac, const int val)
+{
+	return val * frac;
+}
+std::ostream& operator<<(std::ostream& out,  Fraction& frac)
+{
+	if (frac.getNegative() == 1)
+	{
+		frac.setNegative();
+		out << frac.getNumerator() << '/' << frac.getDenominator();
+	}
+	else
+	{
+		out << frac.getNumerator() << '/' << frac.getDenominator();
+	}
+	return out;
+
+}
+
+
+
+int main()
+{	
+  return 0;
+}
